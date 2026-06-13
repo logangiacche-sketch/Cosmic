@@ -1,0 +1,66 @@
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+const state = {
+  selectedMinutes: 30,
+  selectedEnv: 'nebula',
+  startTime: null,
+  totalSeconds: 0,
+  elapsed: 0,
+  running: false,
+  planetsVisited: 0,
+  tipInterval: null,
+  clockInterval: null,
+  animFrame: null,
+  planets: [],
+  particles: [],
+  stars: [],
+  asteroids: [],
+  shipShake: { x: 0, y: 0 },
+  coords: { x: 2847.3, y: -391.7, z: 1203.5 },
+};
+
+// Settings state
+const settings = {
+  planets: true,
+  tips: true,
+  shake: true,
+  warp: false,
+  scanlines: true,
+  glass: true,
+  vignette: true,
+  nebula: true,
+  tipRate: 18000,
+  planetRate: 'normal',
+};
+
+// ══════════════════════════════════════════
+//  THEME ACCENT COLORS PER ENVIRONMENT
+// ══════════════════════════════════════════
+const ENV_ACCENTS = {
+  'nebula':       { accent: '#9955ff', dim: 'rgba(153,85,255,0.25)', glow: 'rgba(153,85,255,0.15)' },
+  'cosmic-rain':  { accent: '#00aaff', dim: 'rgba(0,170,255,0.25)',  glow: 'rgba(0,170,255,0.15)' },
+  'dust':         { accent: '#cc7722', dim: 'rgba(204,119,34,0.25)', glow: 'rgba(204,119,34,0.15)' },
+  'asteroids':    { accent: '#aaaaaa', dim: 'rgba(170,170,170,0.2)', glow: 'rgba(170,170,170,0.1)' },
+  'crystal':      { accent: '#00ddff', dim: 'rgba(0,221,255,0.25)',  glow: 'rgba(0,221,255,0.15)' },
+  'volcanic':     { accent: '#ff5500', dim: 'rgba(255,85,0,0.25)',   glow: 'rgba(255,85,0,0.15)' },
+  'frozen':       { accent: '#99ccff', dim: 'rgba(153,204,255,0.25)',glow: 'rgba(153,204,255,0.15)' },
+  'dark-matter':  { accent: '#aa44ff', dim: 'rgba(170,68,255,0.25)', glow: 'rgba(170,68,255,0.15)' },
+  'aurora':       { accent: '#00ff99', dim: 'rgba(0,255,153,0.25)',  glow: 'rgba(0,255,153,0.15)' },
+  'mixed':        { accent: '#ffaa00', dim: 'rgba(255,170,0,0.25)',  glow: 'rgba(255,170,0,0.15)' },
+};
+
+function applyThemeAccent(env) {
+  const t = ENV_ACCENTS[env] || ENV_ACCENTS.nebula;
+  document.documentElement.style.setProperty('--theme-accent', t.accent);
+  document.documentElement.style.setProperty('--theme-accent-dim', t.dim);
+  document.documentElement.style.setProperty('--theme-accent-glow', t.glow);
+}
+
+// ══════════════════════════════════════════
+//  AUDIO ENGINE (Web Audio API)
+// ══════════════════════════════════════════
+let audioCtx = null;
+let masterGain = null;
+let soundNodes = {}; // id -> { gainNode, sources, active, volume }
+
